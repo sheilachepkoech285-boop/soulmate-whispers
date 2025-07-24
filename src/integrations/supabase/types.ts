@@ -14,7 +14,184 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      credits: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          total_purchased: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          total_purchased?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          total_purchased?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          matched_profile_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          matched_profile_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          matched_profile_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matches_matched_profile_id_fkey"
+            columns: ["matched_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_admin_reply: boolean | null
+          match_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_admin_reply?: boolean | null
+          match_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_admin_reply?: boolean | null
+          match_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          age: number
+          bio: string | null
+          created_at: string
+          gender: string
+          id: string
+          interests: string[] | null
+          intro_video_url: string | null
+          is_admin: boolean | null
+          is_fake_profile: boolean | null
+          location: string | null
+          name: string
+          profile_picture_url: string | null
+          seeking_gender: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age: number
+          bio?: string | null
+          created_at?: string
+          gender: string
+          id?: string
+          interests?: string[] | null
+          intro_video_url?: string | null
+          is_admin?: boolean | null
+          is_fake_profile?: boolean | null
+          location?: string | null
+          name: string
+          profile_picture_url?: string | null
+          seeking_gender: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number
+          bio?: string | null
+          created_at?: string
+          gender?: string
+          id?: string
+          interests?: string[] | null
+          intro_video_url?: string | null
+          is_admin?: boolean | null
+          is_fake_profile?: boolean | null
+          location?: string | null
+          name?: string
+          profile_picture_url?: string | null
+          seeking_gender?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          credits_purchased: number
+          id: string
+          payment_method: string
+          payment_reference: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          credits_purchased: number
+          id?: string
+          payment_method: string
+          payment_reference?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          credits_purchased?: number
+          id?: string
+          payment_method?: string
+          payment_reference?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
