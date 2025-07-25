@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Users, MessageCircle, Star } from 'lucide-react';
+import { createFakeProfiles } from '@/utils/createFakeProfiles';
 
 const Index = () => {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ const Index = () => {
   useEffect(() => {
     if (user) {
       fetchStats();
+      createFakeProfiles(); // Create fake profiles on first load
     }
   }, [user]);
 
@@ -61,6 +63,26 @@ const Index = () => {
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
+    }
+  };
+
+  const [profiles, setProfiles] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
+  const fetchProfiles = async () => {
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('is_fake_profile', true)
+        .limit(5);
+      
+      setProfiles(data || []);
+    } catch (error) {
+      console.error('Error fetching profiles:', error);
     }
   };
 
@@ -167,6 +189,42 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Featured Profiles */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-6 w-6 text-yellow-500" />
+              Featured Profiles
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {profiles.map((profile) => (
+                <div 
+                  key={profile.id}
+                  className="bg-white rounded-lg p-4 shadow-sm hover:shadow-lg transition-shadow cursor-pointer"
+                >
+                  <div className="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg mb-3 overflow-hidden">
+                    {profile.profile_picture_url ? (
+                      <img 
+                        src={profile.profile_picture_url} 
+                        alt={profile.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Heart className="h-8 w-8 text-pink-400" />
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="font-semibold text-sm text-center truncate">{profile.name}</h4>
+                  <p className="text-xs text-muted-foreground text-center">{profile.age}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Welcome Message */}
         {stats.matches === 0 && (
